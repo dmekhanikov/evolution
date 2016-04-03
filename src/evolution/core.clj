@@ -2,10 +2,10 @@
   (:gen-class))
 
 (def population-size 100)
+(def max-population-size 200)
 (def chromosome-size 15)
 (def x-range [-10 10])
-(def mutation-prob 0.01)
-(def crossover-prob 0.5)
+(def mutation-prob 0.1)
 (def iterations 100)
 
 (defn f
@@ -46,13 +46,9 @@
 (defn cross
   [c1 c2]
   (def pref-len (inc (rand-int (dec chromosome-size))))
-  (defn cross-len
-    [c1 c2 pref-len]
-    (concat
-      (take pref-len c1)
-      (drop pref-len c2)))
-  [(cross-len c1 c2 pref-len)
-   (cross-len c2 c1 pref-len)])
+  (concat
+    (take pref-len c1)
+    (drop pref-len c2)))
 
 (defn invert
   [c k]
@@ -70,47 +66,16 @@
   [population size]
   (take size (reverse (sort-by fitness population))))
 
-(defn select 
-  [population]
-  (def fit (map fitness population))
-  (def min-fit (reduce min fit))
-  (def sum-fit (reduce +
-                       (map #(- % min-fit) fit)))
-  (def norm-fit
-    (if (zero? sum-fit)
-      (repeat (count population) (float (/ 1 (count population))))
-      (into []
-            (map #(/ (- % min-fit) sum-fit)
-                 fit))))
-  (def roulette (reductions + norm-fit))
-  (def zipped-roulette (map vector roulette population))
-  (defn select-one
-    []
-    (def q (rand))
-    (second (first
-            (filter (fn [[f _]] (>= f q))
-                    zipped-roulette))))
-
-  (take (count population)
-        (repeatedly #(select-one))))
-
-(defn make-pairs
-  [population]
-  (def index-pairs
-    (partition 2
-               (shuffle (range (count population)))))
-  (map (fn [[f s]] [(nth population f) (nth population s)])
-       index-pairs))
-
 (defn evolve
   [population]
-  (def parent-pool (select population))
   (def new-generation
-    (map #(mutate % mutation-prob)
-         (reduce concat
-           (map #(if (<= (rand) crossover-prob) (apply cross %)) 
-                (make-pairs parent-pool)))))
-  (reduce-pop (concat parent-pool new-generation) population-size))
+    (take (- max-population-size (count population))
+          (repeatedly #(cross (nth population (rand-int (count population)))
+                              (nth population (rand-int (count population)))))))
+    (reduce-pop 
+      (map #(mutate % mutation-prob)
+         (concat population new-generation))
+      population-size))
 
 (defn -main
   [& args]
