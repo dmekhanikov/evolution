@@ -6,7 +6,7 @@
 (def x-range [-10 10])
 (def mutation-prob 0.01)
 (def crossover-prob 0.5)
-(def iterations 100)
+(def stagnation-max-len 10)
 
 (defn f
   [x]
@@ -102,6 +102,12 @@
   (map (fn [[f s]] [(nth population f) (nth population s)])
        index-pairs))
 
+(defn find-best [population]
+  (last (sort-by fitness population)))
+
+(defn best-fitness [population]
+  (fitness (find-best population)))
+
 (defn evolve
   [population]
   (def parent-pool (select population))
@@ -112,16 +118,21 @@
                 (make-pairs parent-pool)))))
   (reduce-pop (concat parent-pool new-generation) population-size))
 
+
 (defn -main
   [& args]
   (def last-population
-    (loop [i 0
-           population (generate-population population-size)]
-      (if (< i iterations)
-        (recur (+ i 1) (evolve population))
+    (loop [population (generate-population population-size)
+           stagnation-len 0]
+      (def new-generation (evolve population))
+      (def new-stagnation-len
+        (if (== (best-fitness population) (best-fitness new-generation))
+        (inc stagnation-len)
+        0))
+      (if (< new-stagnation-len stagnation-max-len)
+        (recur (evolve population) new-stagnation-len)
         population)))
-  (def best-chromosome
-    (first (reverse (sort-by fitness last-population))))
+  (def best-chromosome (find-best last-population))
   (println "x: " (chromosome-to-fun-arg best-chromosome))
   (println "y: " (fitness best-chromosome)))
 
