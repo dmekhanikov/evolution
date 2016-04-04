@@ -5,7 +5,7 @@
 
 (def black [0 0 0])
 (def red [255 0 0])
-(def y-range [-2 2])
+(def y-range [-4 2])
 
 (defn scale [[x y]]
   (defn scale-one
@@ -13,7 +13,7 @@
     (* (- v f) 
        (/ target (- t f))))
   [(apply scale-one (conj x-range (q/width) x)) 
-   (apply scale-one (conj y-range (q/height) (- y)))])
+   (scale-one (- (second y-range)) (- (first y-range)) (q/height) (- y))])
 
 (defn draw-plot [f step]
   (q/stroke-weight 1)
