@@ -2,6 +2,8 @@
 
 This is a visualization of work of an evolutionary algorithm.
 
+![Evolution](/animation.gif)
+
 Implemented algorithm searches for a global extremum of a function. The following function is used as an example:
 ```math
 f(x) = cos(3x - 15) / |x| , x in (-10, -0.3)U(0.3, 10)
