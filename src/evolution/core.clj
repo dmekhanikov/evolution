@@ -96,13 +96,9 @@
 
 (defn make-pairs
   [population]
-  (def rand-indices
-    (shuffle (range (count population))))
-  (def pairs-count (/ (count population) 2))
   (def index-pairs
-    (map vector 
-         (take pairs-count rand-indices)
-         (drop pairs-count rand-indices)))
+    (partition 2
+               (shuffle (range (count population)))))
   (map (fn [[f s]] [(nth population f) (nth population s)])
        index-pairs))
 
