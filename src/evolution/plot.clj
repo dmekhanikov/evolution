@@ -33,8 +33,18 @@
                      (map scale))]
     (apply q/point point)))
 
+(defn write-stats [population]
+  (apply q/fill black)
+  (q/text (str "step: " (q/frame-count) "\n"
+               "max value: " (->> population
+                               (map fitness)
+                               (sort)
+                               (last)))
+          0 20))
+
 (defn setup []
   (q/frame-rate 1)
+  (q/text-font (q/create-font "DejaVu Sans" 14 true))
   (generate-population population-size))
 
 (defn update-pop [population]
@@ -43,7 +53,8 @@
 (defn draw [population]
   (q/background 255)
   (draw-plot f 0.01)
-  (draw-pop population))
+  (draw-pop population)
+  (write-stats population))
 
 (q/sketch
   :size [600 600]
