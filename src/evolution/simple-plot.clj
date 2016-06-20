@@ -1,8 +1,7 @@
 (ns evolution.simple.plot
   (:require [quil.core :as q]
             [quil.middleware :as m])
-  (:use [evolution.core]
-        [evolution.simple]
+  (:use [evolution.simple]
         [evolution.plot]))
 
 (def conf {:f f
