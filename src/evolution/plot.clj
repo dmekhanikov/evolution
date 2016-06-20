@@ -1,73 +1,56 @@
 (ns evolution.plot
-  (:require [quil.core :as q]
-            [quil.middleware :as m])
-  (:use [evolution.simple]
-        [evolution.core]))
+  (:require [quil.core :as q])
+  (:use [evolution.core]))
 
 (def black [0 0 0])
 (def red [255 0 0])
-(def y-range [-4 2])
 
 (defn scale
-  [[x y]]
+  [[x y] conf]
   (let [scale-one (fn [f t target v]
                     (* (- v f) 
                        (/ target (- t f))))]
-    [(apply scale-one (conj x-range (q/width) x)) 
-     (scale-one (- (second y-range)) (- (first y-range)) (q/height) (- y))]))
+    [(apply scale-one (conj (:x-range conf) (q/width) x)) 
+     (scale-one (- (second (:y-range conf))) (- (first (:y-range conf))) (q/height) (- y))]))
 
 (defn draw-plot
-  [f step]
+  [conf]
   (q/stroke-weight 1)
   (apply q/stroke black)
-  (doseq [two-points (->> (apply range (conj x-range step))
-                          (map (fn [x] [x (f x)]))
-                          (map scale)
+  (doseq [two-points (->> (apply range (conj (:x-range conf) (:step conf)))
+                          (map (fn [x] [x ((:f conf) x)]))
+                          (map #(scale % conf))
                           (partition 2 1))]
     (apply q/line two-points)))
 
 (defn draw-pop
-  [population]
+  [population conf]
   (q/stroke-weight 5)
   (apply q/stroke red)
   (doseq [point (->> population
-                     (map chromosome-to-fun-arg)
-                     (map (fn [x] [x (f x)]))
-                     (map scale))]
+                     (map (:chromosome-to-fun-arg conf))
+                     (map (fn [x] [x ((:f conf) x)]))
+                     (map #(scale % conf)))]
     (apply q/point point)))
 
 (defn write-stats
-  [population]
+  [population conf]
   (apply q/fill black)
   (q/text (str "step: " (q/frame-count) "\n"
-               "max value: " (->> population
-                               (map fitness)
-                               sort
-                               last))
+               "max fitness: " (->> population
+                                    (map (:fitness conf))
+                                    sort
+                                    last))
           0 20))
 
-(defn setup
-  []
-  (q/frame-rate 1)
-  (q/text-font (q/create-font "DejaVu Sans" 14 true))
-  (generate-population population-size))
-
 (defn update-pop
-  [population]
-  (evolve population fitness mutate cross population-size))
+  [[population conf]]
+  (let [progress (/ (q/frame-count) (:iterations-count conf))]
+    [(apply evolve population progress ((juxt :fitness :mutate :cross :population-size) conf)) conf]))
 
 (defn draw
-  [population]
+  [[population conf]]
   (q/background 255)
-  (draw-plot f 0.01)
-  (draw-pop population)
-  (write-stats population))
-
-(defn run-applet
-  []
-  (q/sketch
-   :size [600 600]
-   :setup setup
-   :update update-pop
-   :draw draw
-   :middleware [m/fun-mode]))
+  (draw-plot conf)
+  (draw-pop population conf)
+  (write-stats population conf))

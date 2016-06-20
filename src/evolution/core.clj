@@ -1,6 +1,11 @@
 (ns evolution.core
   (:gen-class))
 
+(defn generate-population
+  [generate-chromosome size]
+  (take size
+        (repeatedly #(generate-chromosome))))
+
 (defn reduce-pop
   [population fitness size]
   (take size (reverse (sort-by fitness population))))
@@ -35,11 +40,11 @@
          index-pairs)))
 
 (defn evolve
-  [population fitness mutate cross population-size]
+  [population progress fitness mutate cross population-size]
   (let [parent-pool (select population fitness)
         new-generation (->> parent-pool
                             make-pairs
-                            (map #(apply cross %))
+                            (map (partial apply cross))
                             (reduce concat)
-                            (map mutate))]
+                            (map #(mutate % progress)))]
     (reduce-pop (concat parent-pool new-generation) fitness population-size)))

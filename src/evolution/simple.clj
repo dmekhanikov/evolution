@@ -16,14 +16,9 @@
     0))
 
 (defn generate-chromosome
-  [size]
-  (take size
+  []
+  (take chromosome-size
         (repeatedly #(rand-int 2))))
-
-(defn generate-population
-  [size]
-  (take size
-        (repeatedly #(generate-chromosome chromosome-size))))
 
 (defn chromosome-to-int
   [c]
@@ -63,7 +58,7 @@
           (drop (+ k 1) c)))
 
 (defn mutate
-  [c]
+  [c progress]
   (if (<= (rand) mutation-prob)
     (invert c (rand-int (count c)))
     c))
@@ -71,13 +66,11 @@
 (defn run-simple
   []
   (let [last-population (loop [i 0
-                               population (generate-population population-size)]
+                               population (generate-population generate-chromosome population-size)]
                           (if (< i iterations)
-                            (recur (+ i 1) (evolve population fitness
+                            (recur (+ i 1) (evolve population (/ i iterations) fitness
                                                    mutate cross population-size))
                             population))
-        best-chromosome (->> last-population
-                             (sort-by fitness)
-                             last)]
+        best-chromosome (apply max-key fitness last-population)]
     (println "x: " (chromosome-to-fun-arg best-chromosome))
     (println "y: " (fitness best-chromosome))))
