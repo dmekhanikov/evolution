@@ -3,10 +3,10 @@
 
 (def population-size 100)
 (def dim 3)
-(def x-range [-10 10])
+(def x-range [-5 5])
 (def mutation-prob 0.01)
 (def crossover-prob 0.5)
-(def iterations 100)
+(def iterations 20)
 (def b 1.0)
 (def alpha 0.5)
 
