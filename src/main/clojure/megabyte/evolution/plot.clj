@@ -1,6 +1,6 @@
-(ns evolution.plot
+(ns megabyte.evolution.plot
   (:require [quil.core :as q])
-  (:use [evolution.core]))
+  (:use [megabyte.evolution.core]))
 
 (def black [0 0 0])
 (def red [255 0 0])
@@ -8,7 +8,7 @@
 (defn scale
   [[x y] conf]
   (let [scale-one (fn [f t target v]
-                    (* (- v f) 
+                    (* (- v f)
                        (/ target (- t f))))]
     [(apply scale-one (conj (:x-range conf) (q/width) x)) 
      (scale-one (- (second (:y-range conf))) (- (first (:y-range conf))) (q/height) (- y))]))

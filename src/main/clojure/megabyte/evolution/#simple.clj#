@@ -1,6 +1,6 @@
-(ns evolution.simple
+(ns megabyte.evolution.simple
   (:gen-class)
-  (:use [evolution.core]))
+  (:use [megabyte.evolution.core]))
 
 (def population-size 100)
 (def chromosome-size 15)

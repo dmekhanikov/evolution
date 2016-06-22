@@ -1,5 +1,5 @@
-(ns evolution.multidim
-  (:use [evolution.core]))
+(ns megabyte.evolution.multidim
+  (:use [megabyte.evolution.core]))
 
 (def population-size 100)
 (def dim 3)

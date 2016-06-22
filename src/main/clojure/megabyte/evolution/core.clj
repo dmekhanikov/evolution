@@ -1,4 +1,4 @@
-(ns evolution.core
+(ns megabyte.evolution.core
   (:gen-class))
 
 (defn generate-population

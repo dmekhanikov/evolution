@@ -1,8 +1,9 @@
-(ns evolution.simple.plot
+(ns megabyte.evolution.simple.plot
   (:require [quil.core :as q]
             [quil.middleware :as m])
-  (:use [evolution.simple]
-        [evolution.plot]))
+  (:use [megabyte.evolution.core]
+        [megabyte.evolution.simple]
+        [megabyte.evolution.plot]))
 
 (def conf {:f f
            :x-range x-range

@@ -1,7 +1,7 @@
-(ns evolution.multidim.plot
+(ns megabyte.evolution.multidim.plot
   (:gen-class)
-  (:use [evolution.multidim]
-        [evolution.core])
+  (:use [megabyte.evolution.multidim]
+        [megabyte.evolution.core])
   (:import [org.jzy3d.analysis AnalysisLauncher AbstractAnalysis]
            [org.jzy3d.chart Chart ChartLauncher]
            [org.jzy3d.chart.factories AWTChartComponentFactory]
@@ -45,7 +45,7 @@
        (init []
          (let [mapper (proxy [Mapper] []
                         (^double f [^double x ^double y]
-                         (evolution.multidim/f [x y])))
+                         (megabyte.evolution.multidim/f [x y])))
                range (Range. (- (first x-range) 3) (+ (second x-range) 3))
                steps 80
                surface (Builder/buildOrthonormal
@@ -69,7 +69,7 @@
                  (doto (.getScene @chart)
                    (-> .getGraph .getAll leave-one)
                    (-> (.add spheres))))          
-               (Thread/sleep 1000)
+               (Thread/sleep 5000)
                (if (< i iterations)
                  (recur (evolve population (/ i iterations) fitness mutate
                                 cross population-size)

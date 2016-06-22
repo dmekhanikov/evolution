@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>mekhanikov</groupId>
+    <artifactId>evolution</artifactId>
+    <version>0.1-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <id>clojars</id>
+            <url>http://clojars.org/repo/</url>
+        </repository>
+        <repository>
+            <id>jzy3d-snapshots</id>
+            <name>Jzy3d Snapshots</name>
+            <url>http://maven.jzy3d.org/snapshots</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>quil</groupId>
+            <artifactId>quil</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jzy3d</groupId>
+            <artifactId>jzy3d-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cider</groupId>
+            <artifactId>cider-nrepl</artifactId>
+            <version>0.12.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.theoryinpractise</groupId>
+                <artifactId>clojure-maven-plugin</artifactId>
+                <version>1.8.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <sourceDirectories>
+                        <sourceDirectory>src/main/clojure</sourceDirectory>
+                    </sourceDirectories>
+                    <nreplMiddlewares>
+                        <middleware>cider.nrepl.middleware.apropos/wrap-apropos</middleware>
+                        <middleware>cider.nrepl.middleware.classpath/wrap-classpath</middleware>
+                        <middleware>cider.nrepl.middleware.complete/wrap-complete</middleware>
+                        <middleware>cider.nrepl.middleware.format/wrap-format</middleware>
+                        <middleware>cider.nrepl.middleware.info/wrap-info</middleware>
+                        <middleware>cider.nrepl.middleware.inspect/wrap-inspect</middleware>
+                        <middleware>cider.nrepl.middleware.macroexpand/wrap-macroexpand</middleware>
+                        <middleware>cider.nrepl.middleware.ns/wrap-ns</middleware>
+                        <middleware>cider.nrepl.middleware.pprint/wrap-pprint</middleware>
+                        <middleware>cider.nrepl.middleware.resource/wrap-resource</middleware>
+                        <middleware>cider.nrepl.middleware.stacktrace/wrap-stacktrace</middleware>
+                        <middleware>cider.nrepl.middleware.test/wrap-test</middleware>
+                        <middleware>cider.nrepl.middleware.trace/wrap-trace</middleware>
+                        <middleware>cider.nrepl.middleware.undef/wrap-undef</middleware>
+                    </nreplMiddlewares>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
