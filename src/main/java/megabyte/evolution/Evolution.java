@@ -87,6 +87,9 @@ public class Evolution<T extends Individual> {
             T ind2 = parents.get(i * 2 + 1);
             population.addAll(crossover.cross(ind1, ind2));
         }
+        for (T ind : population) {
+            mutation.mutate(ind);
+        }
         return population;
     }
 }
