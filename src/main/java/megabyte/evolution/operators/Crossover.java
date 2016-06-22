@@ -4,6 +4,6 @@ import megabyte.evolution.Individual;
 
 import java.util.List;
 
-public interface Crossover<T> {
-    List<Individual<T>> cross(Individual<T> ind1, Individual<T> ind2);
+public interface Crossover<T extends Individual> {
+    List<T> cross(T ind1, T ind2);
 }
